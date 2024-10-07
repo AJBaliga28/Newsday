@@ -25,7 +25,7 @@ connectDB();
 // CORS configuration with multiple origins support
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+    const allowedOrigins = process.env.ALLOWED_ORIGINS;
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
