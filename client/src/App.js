@@ -110,7 +110,6 @@ function App() {
           />
           <Route path="/search" element={<SearchResultsPage />} />
           <Route path="/latest" element={<MainPage />} />
-          {/* Assuming you have Latest */}
         </Routes>
       </Router>
     </ThemeProvider>

@@ -1,23 +1,25 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../context/UserContext";
 import { Box, TextField, Button, Typography, Link } from "@mui/material";
-import { Link as RouterLink, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const { login, error, isAuthenticated } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login({ email, password });
+  };
 
-    // If authentication is successful, redirect to /main
+  // Redirect when authentication status changes
+  useEffect(() => {
     if (isAuthenticated) {
       navigate("/main");
     }
-  };
+  }, [isAuthenticated, navigate]);
 
   return (
     <Box

@@ -63,7 +63,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     setDarkMode(!darkMode);
   };
 
-  // Check if the user is authenticated
+  // Check if the user is authenticated (Updated whenever token changes)
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
@@ -89,65 +89,62 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           Newsday
         </Typography>
 
-        {/* Categories */}
-        <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          {categories.map((category) => (
-            <Button
-              key={category}
-              component={Link}
-              to={`/categories/${category.toLowerCase()}`}
-              sx={{ color: "white" }}
-            >
-              {category}
-            </Button>
-          ))}
-          {/* "Latest" Button */}
-          <Button component={Link} to="/latest" sx={{ color: "white" }}>
-            Latest
-          </Button>
-          {/* Personalized Recommendations (visible only if logged in) */}
-          {isAuthenticated && (
-            <Button
-              component={Link}
-              to="/recommendations"
-              sx={{ color: "white" }}
-            >
-              Recommendations
-            </Button>
-          )}
-        </Box>
-
-        {/* Search Icon & Input */}
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton color="inherit" onClick={handleSearchClick}>
-            <SearchIcon />
-          </IconButton>
-          {searchOpen && (
-            <TextField
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearchSubmit}
-              placeholder="Search..."
-              variant="outlined"
-              size="small"
-              sx={{
-                ml: 1,
-                backgroundColor: darkMode ? "#2A2A35" : "white",
-                color: darkMode ? "#F7F7F7" : "#000000",
-                borderRadius: 1,
-              }}
-            />
-          )}
-        </Box>
-
-        {/* Dark Mode Toggle */}
-        <IconButton onClick={handleDarkModeToggle} color="inherit">
-          {darkMode ? <LightMode /> : <DarkMode />}
-        </IconButton>
-
-        {/* Account Icon */}
-        {isAuthenticated ? (
+        {/* Show categories and options only when authenticated */}
+        {isAuthenticated && (
           <>
+            {/* Categories */}
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  component={Link}
+                  to={`/categories/${category.toLowerCase()}`}
+                  sx={{ color: "white" }}
+                >
+                  {category}
+                </Button>
+              ))}
+              <Button component={Link} to="/latest" sx={{ color: "white" }}>
+                Latest
+              </Button>
+              <Button
+                component={Link}
+                to="/recommendations"
+                sx={{ color: "white" }}
+              >
+                Recommendations
+              </Button>
+            </Box>
+
+            {/* Search Bar */}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <IconButton color="inherit" onClick={handleSearchClick}>
+                <SearchIcon />
+              </IconButton>
+              {searchOpen && (
+                <TextField
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchSubmit}
+                  placeholder="Search..."
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    ml: 1,
+                    backgroundColor: darkMode ? "#2A2A35" : "white",
+                    color: darkMode ? "#F7F7F7" : "#000000",
+                    borderRadius: 1,
+                  }}
+                />
+              )}
+            </Box>
+
+            {/* Dark Mode Toggle */}
+            <IconButton onClick={handleDarkModeToggle} color="inherit">
+              {darkMode ? <LightMode /> : <DarkMode />}
+            </IconButton>
+
+            {/* Account Menu */}
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -160,16 +157,10 @@ const Navbar = ({ darkMode, setDarkMode }) => {
             </IconButton>
             <Menu
               anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
               id="primary-account-menu"
               keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
               open={isMenuOpen}
               onClose={handleMenuClose}
             >
@@ -182,15 +173,6 @@ const Navbar = ({ darkMode, setDarkMode }) => {
               </MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
-          </>
-        ) : (
-          <>
-            <Button component={Link} to="/login" sx={{ color: "white" }}>
-              Login
-            </Button>
-            <Button component={Link} to="/signup" sx={{ color: "white" }}>
-              Sign Up
-            </Button>
           </>
         )}
       </Toolbar>

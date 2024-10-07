@@ -115,7 +115,7 @@ export const NewsProvider = ({ children }) => {
 
     try {
       const response = await api.get(
-        `get-recommendations`, // Adjust the endpoint as necessary
+        `/get-recommendations`, // Adjust the endpoint as necessary
         {
           headers: {
             Authorization: `Bearer ${token}`,
