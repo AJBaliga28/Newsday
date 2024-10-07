@@ -24,7 +24,7 @@ connectDB();
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS?.split(",") || ["http://localhost:3000"],
+  origin: process.env.ALLOWED_ORIGINS,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
