@@ -11,6 +11,10 @@ export const NewsProvider = ({ children }) => {
   const [recommendedArticles, setRecommendedArticles] = useState([]);
 
   const token = localStorage.getItem("token");
+  const api = axios.create({
+    baseURL: `${process.env.REACT_APP_API_URL}/api/news`, // Adjust according to your backend
+    headers: { "Content-Type": "application/json" },
+  });
 
   // Filter function to check if an article should be excluded
   const isArticleValid = (article) => {
@@ -28,8 +32,8 @@ export const NewsProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/news/category/${category}?page=${page}&pageSize=${pageSize}`,
+      const response = await api.get(
+        `/category/${category}?page=${page}&pageSize=${pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,8 +58,8 @@ export const NewsProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/news/search?q=${query}&page=${page}&pageSize=${pageSize}`,
+      const response = await api.get(
+        `/search/q=${query}&page=${page}&pageSize=${pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -85,8 +89,8 @@ export const NewsProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/news/latest?page=${page}&pageSize=${pageSize}`,
+      const response = await api.get(
+        `/latest?page=${page}&pageSize=${pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -110,8 +114,8 @@ export const NewsProvider = ({ children }) => {
     setError(null);
 
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/news/get-recommendations`, // Adjust the endpoint as necessary
+      const response = await api.get(
+        `get-recommendations`, // Adjust the endpoint as necessary
         {
           headers: {
             Authorization: `Bearer ${token}`,

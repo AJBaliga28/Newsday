@@ -40,17 +40,19 @@ const ProfilePage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
+  const api = axios.create({
+    baseURL: `${process.env.REACT_APP_API_URL}/api/users`, // Adjust according to your backend
+    headers: { "Content-Type": "application/json" },
+  });
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/users/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await api.get("/profile", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setProfile(response.data);
       } catch (err) {
         setError("Failed to fetch profile. Please try again.");
@@ -66,8 +68,8 @@ const ProfilePage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.put(
-        "http://localhost:5000/api/users/profile",
+      const response = await api.put(
+        "/profile",
         {
           bio: profile.bio,
           location: profile.location,

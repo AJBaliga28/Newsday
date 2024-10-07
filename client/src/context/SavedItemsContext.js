@@ -9,18 +9,20 @@ export const SavedItemsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const api = axios.create({
+    baseURL: `${process.env.REACT_APP_API_URL}/api/saved-items`, // Adjust according to your backend
+    headers: { "Content-Type": "application/json" },
+  });
+
   // Fetch saved articles when the component mounts
   useEffect(() => {
     const fetchSavedItems = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/saved-items",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await api.get("/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setSavedArticles(response.data); // Set fetched saved articles
       } catch (err) {
         setError("Failed to fetch saved articles.");
@@ -35,8 +37,8 @@ export const SavedItemsProvider = ({ children }) => {
   // Function to save an article
   const saveArticle = async (article) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/saved-items",
+      const response = await api.post(
+        "/",
         { article },
         {
           headers: {
@@ -54,14 +56,11 @@ export const SavedItemsProvider = ({ children }) => {
   // Function to remove an article by URL
   const removeArticle = async (url) => {
     try {
-      await axios.delete(
-        `http://localhost:5000/api/saved-items/${encodeURIComponent(url)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      await api.delete(`/${encodeURIComponent(url)}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       // Remove the article from state after successful deletion
       setSavedArticles(
         savedArticles.filter((article) => article.article.url !== url)
