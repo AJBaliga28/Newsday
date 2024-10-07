@@ -1,0 +1,103 @@
+// Fetch recommended articles based on user's ID
+// exports.getRecommendedArticles = async (req, res) => {
+//   const userId = req.user.id;
+
+//   // Spawn a new process to run the Python recommendation script
+//   const pythonProcess = spawn("python3", ["scripts/recommend.py", userId]);
+
+//   // Collect data from Python script
+//   pythonProcess.stdout.on("data", async (data) => {
+//     const recommendedTitles = JSON.parse(data.toString());
+//     console.log(recommendedTitles);
+//     // If there are no recommendations, send an empty response
+//     if (!recommendedTitles.length) {
+//       return res.status(200).json([]);
+//     }
+
+//     try {
+//       // Fetch news articles from NewsAPI based on the recommended titles
+//       const articlePromises = recommendedTitles.map((title) =>
+//         axios.get(
+//           `${BASE_URL}/everything?q=${encodeURIComponent(
+//             title
+//           )}&apiKey=${API_KEY}`
+//         )
+//       );
+
+//       const responses = await Promise.all(articlePromises);
+
+//       // Aggregate all articles and return them as a single array
+//       const articles = responses.flatMap((response) => response.data.articles);
+//       console.log("Recommended Articles: ", articles);
+//       res.status(200).json(articles);
+//     } catch (error) {
+//       console.error("Error fetching recommended articles from API:", error);
+//       res
+//         .status(500)
+//         .json({ message: "Error fetching recommended articles from API" });
+//     }
+//   });
+
+//   // Handle errors from Python script
+//   pythonProcess.stderr.on("data", (data) => {
+//     console.error(`Python Error: ${data}`);
+//     res.status(500).json({ error: "Failed to get recommendations" });
+//   });
+// };
+
+------------------------------------
+
+
+// Fetch recommended articles based on user's ID
+// exports.getRecommendedArticles = async (req, res) => {
+//   const userId = req.user.id;
+
+//   // Spawn a new process to run the Python recommendation script
+//   const pythonProcess = spawn("python3", ["scripts/recommend.py", userId]);
+
+//   let pythonData = "";
+
+//   // Collect data from Python script
+//   pythonProcess.stdout.on("data", (data) => {
+//     pythonData += data.toString(); // Accumulate data from Python stdout
+//   });
+
+//   // Once the Python process has finished executing
+//   pythonProcess.stdout.on("end", async () => {
+//     try {
+//       const recommendedTitles = JSON.parse(pythonData); // Parse the accumulated JSON string
+
+//       // If there are no recommendations, send an empty response
+//       if (!recommendedTitles.length) {
+//         return res.status(200).json([]);
+//       }
+
+//       // Fetch news articles from NewsAPI based on the recommended titles
+//       const articlePromises = recommendedTitles.map((article) =>
+//         axios.get(
+//           `${BASE_URL}/everything?q=${encodeURIComponent(
+//             article.title
+//           )}&apiKey=${API_KEY}`
+//         )
+//       );
+
+//       const responses = await Promise.all(articlePromises);
+
+//       // Aggregate all articles and return them as a single array
+//       const articles = responses.flatMap((response) => response.data.articles);
+//       console.log("Recommended Articles: ", articles);
+//       res.status(200).json(articles);
+//     } catch (error) {
+//       console.error("Error fetching recommended articles from API:", error);
+//       res
+//         .status(500)
+//         .json({ message: "Error fetching recommended articles from API" });
+//     }
+//   });
+
+//   // Handle errors from Python script
+//   pythonProcess.stderr.on("data", (data) => {
+//     console.error(`Python Error: ${data}`);
+//     res.status(500).json({ error: "Failed to get recommendations" });
+//   });
+// };
