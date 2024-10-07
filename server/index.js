@@ -22,9 +22,16 @@ app.use(bodyParser.json());
 // Connect to database
 connectDB();
 
-// CORS configuration
+// CORS configuration with multiple origins support
 const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS,
+  origin: function (origin, callback) {
+    const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
@@ -33,10 +40,20 @@ const corsOptions = {
 // Enable CORS
 app.use(cors(corsOptions));
 
+// Handle preflight requests
+app.options("*", cors(corsOptions));
+
 // Parse JSON bodies
 app.use(express.json());
 
-// app.use(authMiddleware);
+// Define your routes here
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/news", newsRoutes);
+app.use("/api/saved-items", savedItemsRoutes);
+
+// Error middleware
+app.use(errorMiddleware);
 
 // Routes
 app.use("/api/auth", authRoutes);
