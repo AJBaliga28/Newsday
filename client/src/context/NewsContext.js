@@ -112,7 +112,7 @@ export const NewsProvider = ({ children }) => {
   const fetchRecommendedArticles = async () => {
     setLoading(true);
     setError(null);
-
+    console.log(token);
     try {
       const response = await api.get(
         `/get-recommendations`, // Adjust the endpoint as necessary
@@ -123,7 +123,7 @@ export const NewsProvider = ({ children }) => {
           },
         }
       );
-
+      console.log(response.data);
       // Filter out invalid articles
       const filteredArticles = response.data.filter(isArticleValid);
       setRecommendedArticles(filteredArticles);
