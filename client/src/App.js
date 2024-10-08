@@ -17,11 +17,13 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Check authentication status on component mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
+  // Dark and Light Themes
   const darkTheme = createTheme({
     palette: {
       mode: "dark",
@@ -60,18 +62,22 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        {isAuthenticated && (
-          <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-        )}
+        {/* Navbar is displayed on all routes */}
+        <Navbar
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          isAuthenticated={isAuthenticated}
+        />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
+
           {/* Protected Routes */}
           <Route
             path="/main"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <MainPage />
               </ProtectedRoute>
             }
@@ -79,7 +85,7 @@ function App() {
           <Route
             path="/profile"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <ProfilePage />
               </ProtectedRoute>
             }
@@ -87,7 +93,7 @@ function App() {
           <Route
             path="/profile/saved-items"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <SavedItemsPage />
               </ProtectedRoute>
             }
@@ -95,7 +101,7 @@ function App() {
           <Route
             path="/categories/:categoryname"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <CategoryPage />
               </ProtectedRoute>
             }
@@ -103,7 +109,7 @@ function App() {
           <Route
             path="/recommendations"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <RecommendationsPage />
               </ProtectedRoute>
             }

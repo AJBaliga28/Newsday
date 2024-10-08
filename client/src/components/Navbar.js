@@ -72,7 +72,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
-    navigate("/login");
+    navigate("/");
     handleMenuClose();
   };
 
@@ -89,8 +89,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           Newsday
         </Typography>
 
-        {/* Show categories and options only when authenticated */}
-        {isAuthenticated && (
+        {/* If user is authenticated, show categories and other options */}
+        {isAuthenticated ? (
           <>
             {/* Categories */}
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
@@ -174,6 +174,21 @@ const Navbar = ({ darkMode, setDarkMode }) => {
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </>
+        ) : (
+          /* Show Login/Signup buttons when not authenticated */
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Button component={Link} to="/login" sx={{ color: "white" }}>
+              Login
+            </Button>
+            <Button component={Link} to="/signup" sx={{ color: "white" }}>
+              Signup
+            </Button>
+
+            {/* Dark Mode Toggle */}
+            <IconButton onClick={handleDarkModeToggle} color="inherit">
+              {darkMode ? <LightMode /> : <DarkMode />}
+            </IconButton>
+          </Box>
         )}
       </Toolbar>
     </AppBar>
